@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -20,22 +21,33 @@ public class Mover : MonoBehaviour
     void Update()
     {
 
-        NavMeshAgent nav = GetComponent<NavMeshAgent>();
-
-        nav.SetDestination(m_Target.position);
-
-        RayCastPointer();
-
-    }
-
-    private void RayCastPointer()
-    {
         //when we left click, we will do the following
         if (Input.GetMouseButtonDown(0))
         {
-            m_LastRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            MoveToCursor();
         }
-        //starting point is origin... we multiply by 100 to make the ray go much further than the destination point, that way we can see it well
-        Debug.DrawRay(m_LastRay.origin, m_LastRay.direction * 100);
+
+    }
+
+
+    /// <summary>
+    /// RayCast to a position and tell the NavMesh Agent to set that as the target
+    /// </summary>
+    private void MoveToCursor()
+    {
+        //cast a ray from camera to mouse possition
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        NavMeshAgent nav = GetComponent<NavMeshAgent>();
+
+        //the out parameter is the raycasthit collision point that we will manipulate
+        bool hasHit = Physics.Raycast(ray, out hit);
+
+        //if we hit something, move to that point
+        if (hasHit)
+        {
+            nav.SetDestination(hit.point);
+
+        }
     }
 }
