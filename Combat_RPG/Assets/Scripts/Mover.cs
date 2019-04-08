@@ -21,33 +21,33 @@ public class Mover : MonoBehaviour
     void Update()
     {
 
-        //when we left click, we will do the following
-        if (Input.GetMouseButtonDown(0))
-        {
-            MoveToCursor();
-        }
 
+
+        UpdateAnimator();
     }
 
+
+
+    public void MoveTo(Vector3 destination)
+    {
+        NavMeshAgent nav = GetComponent<NavMeshAgent>();
+        nav.SetDestination(destination);
+    }
 
     /// <summary>
-    /// RayCast to a position and tell the NavMesh Agent to set that as the target
+    /// The forwardSpeed animation using a BlendTree will switch from one animation to the next, based on velocity
     /// </summary>
-    private void MoveToCursor()
+    private void UpdateAnimator()
     {
-        //cast a ray from camera to mouse possition
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        NavMeshAgent nav = GetComponent<NavMeshAgent>();
 
-        //the out parameter is the raycasthit collision point that we will manipulate
-        bool hasHit = Physics.Raycast(ray, out hit);
+        //Get the curent speed of the navmesh agent, 
+        Vector3 velocity = GetComponent<NavMeshAgent>().velocity;
+        //inverse basically takes the global and converts it to local, that is meaniongful for the character animaiton
+        Vector3 localVelocity = transform.InverseTransformDirection(velocity);
 
-        //if we hit something, move to that point
-        if (hasHit)
-        {
-            nav.SetDestination(hit.point);
-
-        }
+        float speed = localVelocity.z;
+        //The blend tree has thresholds that determine which animaiton to use, idle, wlak or run, and everything blended inbetween. When it's set, the animation will be applied
+        GetComponent<Animator>().SetFloat("forwardSpeed", speed);
     }
+
 }
