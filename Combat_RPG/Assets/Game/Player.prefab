@@ -10,9 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 6258681722301206825}
   - component: {fileID: 25431788256764968}
+  - component: {fileID: 5699221576490850000}
   - component: {fileID: 6220208733869760034}
   - component: {fileID: 2555355319000117061}
+  - component: {fileID: 4042224311638352706}
   - component: {fileID: 6220208733869760035}
+  - component: {fileID: 6231649418933912980}
+  - component: {fileID: 6220208733869760038}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -72,6 +76,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &5699221576490850000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6220208733869760033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab0c5557ecf231f4daefe42db77b30a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6220208733869760034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +113,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72fdeed0b61aaa1489793b5e5cd8a64f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4042224311638352706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6220208733869760033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc77eb62549a9db4290400acf1e692ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_WeaponRange: 2
 --- !u!195 &6220208733869760035
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -107,10 +136,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.3
-  m_Speed: 12
-  m_Acceleration: 20
+  m_Speed: 5.66
+  m_Acceleration: 50
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 1000
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -119,6 +148,41 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &6231649418933912980
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6220208733869760033}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: d288a0e4a2d923b46898986e979da643, type: 3}
+  m_Controller: {fileID: 9100000, guid: 125e645f8dca74d478f1b914606a57a8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!54 &6220208733869760038
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6220208733869760033}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &2435868545646610522
 PrefabInstance:
   m_ObjectHideFlags: 0
