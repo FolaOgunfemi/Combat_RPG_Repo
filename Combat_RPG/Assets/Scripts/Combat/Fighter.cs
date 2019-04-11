@@ -62,14 +62,36 @@ public class Fighter : MonoBehaviour, IAction
 
         private void AttackBehavior()
         {
+            //Look at enemy when attacking
+            transform.LookAt(m_Target.transform);
             if (m_timeSinceLastAttack > m_DelayBetweenAttacks)
             {
                 ///NOTE: DAMAGE SHOULD BE DEALT AT THE RIGHT POINT IN THE ANIMAITON. WE IMPLEMENT THIS BY APPLYING DAMAGE IN THE "HIT" METHOD, WHICH IS AN ANIMAITON EVENT
-                m_Animator.SetTrigger("attack");
+                TriggerAttack();
                 m_timeSinceLastAttack = 0f;
 
             }
-         
+
+        }
+
+        private void TriggerAttack()
+        {
+            m_Animator.ResetTrigger("attack");
+            m_Animator.SetTrigger("attack");
+        }
+
+        public bool CanAttack(CombatTarget combatTarget)
+        {
+            if(combatTarget == null)
+            {
+                return false;
+            }
+            Health targetHealth = combatTarget.GetComponent<Health>();
+            if(combatTarget != null && targetHealth.GetIsDead() == false)
+            {
+                return true;
+            }
+            return false;
         }
 
 
@@ -79,12 +101,14 @@ public class Fighter : MonoBehaviour, IAction
         void Hit()
         {
 
-            if (m_Target != null)
+            if (m_Target == null)
             {
+                return;
+            }
               //  Health healthComponenet = m_Target.GetComponent<Health>();
 
                 m_Target.TakeDamage(m_WeaponDamage);
-            }
+            
             Debug.Log("Hit Event Called");
         }
 
@@ -110,10 +134,15 @@ public class Fighter : MonoBehaviour, IAction
         //Unsets the target so that we can move and not continue attacking
         private void CancelAttack()
         {
-            m_Animator.SetTrigger("stopAttacking");
+            StopAttack();
             m_Target = null;
         }
 
+        private void StopAttack()
+        {
+            m_Animator.ResetTrigger("attack");
+            m_Animator.SetTrigger("stopAttacking");
+        }
 
-}
+    }
 }

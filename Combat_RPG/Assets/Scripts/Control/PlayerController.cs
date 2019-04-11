@@ -52,8 +52,12 @@ public class PlayerController : MonoBehaviour
             foreach(RaycastHit hit in hits)
             {
                 CombatTarget target = hit.transform.gameObject.GetComponent<CombatTarget>();
+               // Health targetHealth = hit.transform.gameObject.GetComponent<Health>();
+                Fighter thisFighter = GetComponent<Fighter>();
                 //skip the rest of the body of this loop, and go to the next iteration...same as checking if its not null
-                if (target == null)
+
+                //skip the target if they are dead
+                if (thisFighter.CanAttack(target) == false)
                 {
                     continue;
                 }
