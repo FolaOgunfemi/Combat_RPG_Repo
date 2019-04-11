@@ -8,7 +8,7 @@ namespace RPG.Combat {
 public class Fighter : MonoBehaviour, IAction
 {
         public static string SampleEnemyDialogue = "Think You Can Take Me?! Don't Forget Me!!";
-        private Transform m_Target;
+        private Health m_Target;
         [SerializeField] [Tooltip("The range at which we stop approaching and start attacking")]
         private float m_WeaponRange = 2f;
         private Animator m_Animator;
@@ -31,9 +31,16 @@ public class Fighter : MonoBehaviour, IAction
             m_timeSinceLastAttack += Time.deltaTime;
 
 
-            if (m_Target != null)
+            if (m_Target == null)
             {
-                bool isInRange = Vector3.Distance(transform.position, m_Target.position) < m_WeaponRange;
+                return;
+            }
+
+            if (m_Target.GetIsDead())
+            {
+                return;
+            }
+                bool isInRange = Vector3.Distance(transform.position, m_Target.transform.position) < m_WeaponRange;
 
                 Mover mover = GetComponent<Mover>();
 
@@ -41,14 +48,14 @@ public class Fighter : MonoBehaviour, IAction
                 if ( !isInRange)
                 {
 
-                    mover.MoveTo(m_Target.position);
+                    mover.MoveTo(m_Target.transform.position);
                 }
                 else
                 {
                     mover.Cancel();
                     AttackBehavior();
                 }
-            }
+            
             
     }
 
@@ -74,9 +81,9 @@ public class Fighter : MonoBehaviour, IAction
 
             if (m_Target != null)
             {
-                Health healthComponenet = m_Target.GetComponent<Health>();
+              //  Health healthComponenet = m_Target.GetComponent<Health>();
 
-                healthComponenet.TakeDamage(m_WeaponDamage);
+                m_Target.TakeDamage(m_WeaponDamage);
             }
             Debug.Log("Hit Event Called");
         }
@@ -89,7 +96,7 @@ public class Fighter : MonoBehaviour, IAction
         {
             GetComponent<ActionScheduler>().StartAction(this);
 
-            m_Target = combatTarget.transform;
+            m_Target = combatTarget.transform.GetComponent<Health>();
             
             Debug.Log(SampleEnemyDialogue);
            
@@ -103,6 +110,7 @@ public class Fighter : MonoBehaviour, IAction
         //Unsets the target so that we can move and not continue attacking
         private void CancelAttack()
         {
+            m_Animator.SetTrigger("stopAttacking");
             m_Target = null;
         }
 
