@@ -11,8 +11,8 @@ public class AIController : MonoBehaviour
 
         [SerializeField]
         private float m_ChaseDistance = 5f;
-        [SerializeField]
-        private float m_DistanceFromPlayer = 1000f;
+      //  [SerializeField]
+        private float m_DistanceFromPlayer = Mathf.Infinity;
 
         [Header("Basic Components")]
         private GameObject m_Player;

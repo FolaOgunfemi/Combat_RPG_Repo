@@ -33,11 +33,11 @@ public class PatrolPath : MonoBehaviour
         //corner case for when the last waypoint needs to lead the the first one, not just plus one
         if(i+1 == transform.childCount)
         {
-            Debug.Log("NEXT INDEX " + 0);
+       //     Debug.Log("NEXT INDEX " + 0);
             return 0;
             
         }
-        Debug.Log("NEXT INDEX " + i + 1);
+      //  Debug.Log("NEXT INDEX " + i + 1);
         return i + 1;
         
     }
