@@ -8,7 +8,7 @@ using UnityEngine;
 namespace RPG.Control { 
 public class AIController : MonoBehaviour
 {
-
+        //
         [SerializeField]
         private float m_ChaseDistance = 5f;
       //  [SerializeField]
