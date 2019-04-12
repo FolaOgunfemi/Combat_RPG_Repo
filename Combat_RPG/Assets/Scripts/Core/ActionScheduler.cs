@@ -41,6 +41,12 @@ namespace RPG.Core
        
             }
 
-        
+        /// <summary>
+        /// Fragile method. If logic of startAciton changes, this logic also must change
+        /// </summary>
+        public void CancelCurrentAction()
+        {
+            StartAction(null);
+        }
     }
 }

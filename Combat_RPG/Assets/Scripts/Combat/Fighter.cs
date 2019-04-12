@@ -14,7 +14,8 @@ public class Fighter : MonoBehaviour, IAction
         private Animator m_Animator;
         [SerializeField]
         private float m_DelayBetweenAttacks = 1f;
-        private float m_timeSinceLastAttack = 0f;
+        
+        private float m_timeSinceLastAttack = Mathf.Infinity;
         [SerializeField]
        private float m_WeaponDamage = 5f;
 
@@ -80,14 +81,14 @@ public class Fighter : MonoBehaviour, IAction
             m_Animator.SetTrigger("attack");
         }
 
-        public bool CanAttack(CombatTarget combatTarget)
+        public bool CanAttack(GameObject combatTarget)
         {
             if(combatTarget == null)
             {
                 return false;
             }
             Health targetHealth = combatTarget.GetComponent<Health>();
-            if(combatTarget != null && targetHealth.GetIsDead() == false)
+            if(targetHealth != null && targetHealth.GetIsDead() == false)
             {
                 return true;
             }
@@ -116,7 +117,7 @@ public class Fighter : MonoBehaviour, IAction
         /// When we attack, we move within range of the target and then attack
         /// </summary>
         /// <param name="target"></param>
-        public void Attack(CombatTarget combatTarget)
+        public void Attack(GameObject combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
 

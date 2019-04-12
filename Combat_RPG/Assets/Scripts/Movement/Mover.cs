@@ -14,18 +14,31 @@ namespace RPG.Movement
         private Transform m_Target;
 
         private NavMeshAgent m_NavMeshAgent;
+
+        private Health m_Health;
     //    private Fighter m_Fighter;
         Ray m_LastRay;
         // Start is called before the first frame update
         void Start()
         {
             m_NavMeshAgent = GetComponent<NavMeshAgent>();
+            m_Health = GetComponent<Health>();
        //     m_Fighter = GetComponent<Fighter>();
         }
 
         // Update is called once per frame
         void Update()
         {
+
+            if (m_Health.GetIsDead())
+            {
+                m_NavMeshAgent.enabled = false;
+            }
+            else if(m_Health.GetIsDead() == false && m_NavMeshAgent.enabled == false)
+            {
+                m_NavMeshAgent.enabled = true;
+                Debug.Log("Activating navmesh bc we are alive");
+            }
 
             UpdateAnimator();
         }

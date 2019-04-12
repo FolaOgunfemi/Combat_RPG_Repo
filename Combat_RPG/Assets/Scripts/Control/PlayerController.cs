@@ -4,26 +4,33 @@ using UnityEngine;
 using RPG.Movement;
 using System;
 using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Control { 
 
 
 public class PlayerController : MonoBehaviour
 {
+        private Health m_Health;
 
-      
+
 
 
         #region UnityEvents
         // Start is called before the first frame update
         void Start()
     {
+            m_Health = GetComponent<Health>();
 
-    }
+        }
 
     // Update is called once per frame
     void Update()
         {
+            if (m_Health.GetIsDead())
+            {
+                return;
+            }
             #region ACTION PRIORITY
             //if you clickj on something, first check if we can attack it, if not, move there
             if ( InteractWithCombat())
@@ -56,14 +63,19 @@ public class PlayerController : MonoBehaviour
                 Fighter thisFighter = GetComponent<Fighter>();
                 //skip the rest of the body of this loop, and go to the next iteration...same as checking if its not null
 
+                if(target == null)
+                {
+                    continue;
+                }
+                
                 //skip the target if they are dead
-                if (thisFighter.CanAttack(target) == false)
+                if (thisFighter.CanAttack(target.gameObject) == false)
                 {
                     continue;
                 }
                 //atatcks are clicks, not holding down, so its mousedown ironically
                 if (Input.GetMouseButtonDown(0)) { 
-                    GetComponent<Fighter>().Attack(target);
+                    GetComponent<Fighter>().Attack(target.gameObject);
 
                     
                         }

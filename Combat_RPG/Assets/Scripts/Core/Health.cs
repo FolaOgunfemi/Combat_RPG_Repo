@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RPG.Combat {
+namespace RPG.Core {
     public class Health : MonoBehaviour
     {
         [SerializeField] [Range (0f, 100f)]
@@ -35,10 +35,14 @@ namespace RPG.Combat {
         /// </summary>
         private void TriggerDeath()
         {
-            if ( m_IsDead == false) {
-                m_Animator.SetTrigger("die");
+            if ( m_IsDead ) {
+                return;
+                 }
+
+                
                 m_IsDead = true;
-            }
+            m_Animator.SetTrigger("die");
+            GetComponent<ActionScheduler>().CancelCurrentAction();
         }
 
         // Start is called before the first frame update
