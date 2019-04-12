@@ -1,6 +1,7 @@
 ﻿using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,9 +17,11 @@ public class AIController : MonoBehaviour
         [Header("Basic Components")]
         private GameObject m_Player;
         private Fighter m_Fighter;
-
+        [SerializeField]
+        PatrolPath m_PatrolPath ;
         private Health m_Health;
         private Mover m_Mover;
+        private ActionScheduler m_ActionScheduler;
 
         [Header("Guard's Memory")]
         Vector3 m_PositionToGuard;
@@ -26,11 +29,20 @@ public class AIController : MonoBehaviour
         float m_TimeSinceLastSawPlayer = Mathf.Infinity;
         [SerializeField] [Tooltip("Note that Suspicion Time includes the time it takes the guard to walk to the players final sighted position, Which is why it needs to be longer that expected...See Q&A https://www.udemy.com/unityrpg/learn/lecture/14049407#questions/6666208")]
         private float m_SuspicionTime = 5f;
+        [SerializeField]
+        private float m_WaypointTolerance = 1f;
+        [SerializeField]
+        private int m_CurrentWaypointIndex = 0;
+        private float m_TimeSinceArrivedAtLastWaypoint = Mathf.Infinity;
+        [SerializeField]
+        private float m_WaypointDwellTime = 3f;
 
 
-       // [SerializeField]
-       // private float m_AttackRange 
-       // Start is called before the first frame update
+
+
+        // [SerializeField]
+        // private float m_AttackRange 
+        // Start is called before the first frame update
         void Start()
     {
             m_PositionToGuard = transform.position;
@@ -38,6 +50,7 @@ public class AIController : MonoBehaviour
            m_Fighter = GetComponent<Fighter>();
             m_Health = GetComponent<Health>();
             m_Mover = GetComponent<Mover>();
+            m_ActionScheduler = GetComponent<ActionScheduler>();
 
             
         }
@@ -55,7 +68,7 @@ public class AIController : MonoBehaviour
 
                 Debug.Log("Player is within Chase Distance of " + gameObject.name);
 
-                m_TimeSinceLastSawPlayer = 0;
+                
                 AttackBehavior();
             }
             #endregion
@@ -73,18 +86,67 @@ public class AIController : MonoBehaviour
             {
 
                 //Our Current logic makes StartMoveAciton automatically cancel the fight action //   m_Fighter.Cancel();
-                GuardBehavior();
+                PatrolBehaviour();
             }
             #endregion
 
 
             //increment counters 
-            m_TimeSinceLastSawPlayer += Time.deltaTime;
+            UpdateTimers();
         }
 
-        private void GuardBehavior()
+        private void UpdateTimers()
         {
-            m_Mover.StartMoveAction(m_PositionToGuard);
+            m_TimeSinceLastSawPlayer += Time.deltaTime;
+            m_TimeSinceArrivedAtLastWaypoint += Time.deltaTime;
+        }
+
+        private void PatrolBehaviour()
+        {
+
+
+            //initialize first destination
+            Vector3 nextPosition = m_PositionToGuard;
+                    if (m_PatrolPath != null)
+                    { 
+                    if (AtWayPoint())
+                    {
+                        
+
+                    m_ActionScheduler.CancelCurrentAction();
+                    m_TimeSinceArrivedAtLastWaypoint = 0f;
+                    CycleWayPoint();
+
+                    
+                }
+                    nextPosition = GetCurrentWaypoint();
+                      }
+
+            //Don't move until we have dwelled first
+            if (m_TimeSinceArrivedAtLastWaypoint > m_WaypointDwellTime)
+            {
+                m_Mover.StartMoveAction(nextPosition);
+
+            }
+        }
+
+     
+
+        private void CycleWayPoint()
+        {
+            m_CurrentWaypointIndex = m_PatrolPath.GetNextIndex(m_CurrentWaypointIndex);
+        }
+
+        private Vector3 GetCurrentWaypoint()
+        {
+            
+            return m_PatrolPath.GetWaypoint(m_CurrentWaypointIndex);
+        }
+
+        private bool AtWayPoint()
+        {
+            float distanceToWaypoint = Vector3.Distance(transform.position, GetCurrentWaypoint());
+            return distanceToWaypoint < m_WaypointTolerance;
         }
 
         private void SuspiciounBehavior()
@@ -94,6 +156,7 @@ public class AIController : MonoBehaviour
 
         private void AttackBehavior()
         {
+            m_TimeSinceLastSawPlayer = 0;
             m_Fighter.Attack(m_Player);
         }
 

@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
                     continue;
                 }
                 //atatcks are clicks, not holding down, so its mousedown ironically
-                if (Input.GetMouseButtonDown(0)) { 
+                if (Input.GetMouseButton(0)) { 
                     GetComponent<Fighter>().Attack(target.gameObject);
 
                     
